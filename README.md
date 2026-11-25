@@ -1,4 +1,3 @@
-
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=230&color=0:050816,50:101B40,100:00E5FF&text=KOLO30&fontColor=00E5FF&fontSize=75&fontAlignY=40&animation=fadeIn&desc=Developer%20%7C%20Tech%20Enthusiast&descAlignY=62&descSize=18" width="100%"/>
@@ -8,7 +7,7 @@
 <br/>
 
 <a href="https://github.com/KOLO30">
-<img src="https://img.shields.io/badge/PROFILE-0D1117?style=for-the-badge&logo=github&logoColor=00E5FF"/>
+  <img src="https://img.shields.io/badge/PROFILE-0D1117?style=for-the-badge&logo=github&logoColor=00E5FF"/>
 </a>
 <img src="https://img.shields.io/badge/STATUS-ONLINE-00E5FF?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/BASED_IN-POLAND-white?style=for-the-badge&logo=googlemaps&logoColor=00E5FF"/>
@@ -28,7 +27,6 @@
     and exploring new technologies.
 
 └─$ echo "Never stop learning."
-```
 
 - 🔭 Exploring new technologies and building projects
 - 🌱 Always learning and improving
