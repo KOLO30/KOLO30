@@ -13,15 +13,30 @@ jobs:
 
     steps:
       - name: Generate contribution snake
-        uses: Platane/snk/svg-only@v3
+        uses: Platane/snk@v3
         with:
           github_user_name: KOLO30
           outputs: |
             dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark&color_snake=#00E5FF
 
-      - name: Crop outer margin
-        run: python3 -c 'import glob,re; [open(p,"w").write(re.sub(r"viewBox=\"([^\"]+)\"", lambda m: (lambda x,y,w,h: f"viewBox=\"{x+16:g} {y+16:g} {w-32:g} {h-16:g}\"")(*map(float,m.group(1).split())), open(p).read(), count=1)) for p in glob.glob("dist/*.svg")]'
+      - name: Crop outer margin so snake stays inside grid
+        run: |
+          python3 -c '
+          import glob, re
+
+          for path in glob.glob("dist/*.svg"):
+              with open(path, "r", encoding="utf-8") as f:
+                  svg = f.read()
+
+              def crop_viewbox(match):
+                  x, y, w, h = map(float, match.group(1).split())
+                  return f"viewBox=\"{x + 16:g} {y + 16:g} {w - 32:g} {h - 16:g}\""
+
+              svg = re.sub(r"viewBox=\"([^\"]+)\"", crop_viewbox, svg, count=1)
+              with open(path, "w", encoding="utf-8") as f:
+                  f.write(svg)
+          '
 
       - name: Deploy to output branch
         uses: crazy-max/ghaction-github-pages@v4
