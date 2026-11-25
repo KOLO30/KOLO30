@@ -74,20 +74,26 @@
 
 ---
 
-<h2 align="center">🐍 CONTRIBUTION SNAKE</h2>
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/KOLO30/KOLO30/output/snake.svg" alt="Contribution Snake"/>
+<h2>🐍 CONTRIBUTION SNAKE</h2>
+
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="https://raw.githubusercontent.com/KOLO30/KOLO30/output/github-snake-dark.svg"
+  />
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="https://raw.githubusercontent.com/KOLO30/KOLO30/output/github-snake.svg"
+  />
+  <img
+    alt="GitHub contribution snake"
+    src="https://raw.githubusercontent.com/KOLO30/KOLO30/output/github-snake.svg"
+    width="100%"
+  />
+</picture>
 
 </div>
 
----
-
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&height=120&color=0:00E5FF,50:101B40,100:050816&section=footer"/>
-
-<code>「 Stay hungry. Stay curious. Keep coding. 」</code>
-
-</div>
