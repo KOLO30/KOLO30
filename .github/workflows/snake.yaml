@@ -4,30 +4,65 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snake
+  cancel-in-progress: true
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 10
 
     steps:
       - name: Generate contribution snake
         uses: Platane/snk@v3
         with:
-          github_user_name: KOLO30
+          github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-snake.svg
-            dist/github-snake-dark.svg?palette=github-dark&color_snake=#00E5FF
+            dist/github-snake.svg?color_snake=#0891B2&color_dots=#ebedf0,#a5f3fc,#22d3ee,#0891b2,#155e75
+            dist/github-snake-dark.svg?palette=github-dark&color_snake=#00E5FF&color_dots=#161b22,#0e4f5c,#007f8f,#00b8cc,#00e5ff
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Crop outer margin
+      - name: Widen canvas so the snake never leaves it
         run: |
-          python3 -c 'import glob,re; [open(p,"w").write(re.sub(r"viewBox=\"([^\"]+)\"", lambda m: "viewBox=\"{:g} {:g} {:g} {:g}\"".format(*[float(v)+d for v,d in zip(m.group(1).split(),[16,16,-32,-16])]), open(p).read(), count=1)) for p in glob.glob("dist/*.svg")]'
+          # snk runs in Docker as root, so the runner user cannot overwrite its files
+          sudo chown -R "$(id -u):$(id -g)" dist
+          python3 - <<'EOF'
+          import glob, re
 
-      - name: Deploy to output branch
+          # one cell; the snk solver can move the snake 2 cells right of the grid, but the default canvas only has 1
+          PAD = 16
+
+          for path in glob.glob("dist/*.svg"):
+              with open(path) as f:
+                  svg = f.read()
+
+              def widen(m):
+                  x, y, w, h = (float(v) for v in m.group(1).split())
+                  return f'<svg viewBox="{x - PAD:g} {y:g} {w + 2 * PAD:g} {h:g}" width="{w + 2 * PAD:g}"'
+
+              svg, n = re.subn(r'<svg viewBox="([^"]+)" width="[^"]+"', widen, svg, count=1)
+              if n != 1:
+                  raise SystemExit(f"{path}: unexpected <svg> header, snk output format changed")
+
+              with open(path, "w") as f:
+                  f.write(svg)
+              print(f"{path}: canvas widened by {PAD}px on each side")
+          EOF
+
+      - name: Push to output branch
         uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
           build_dir: dist
+          commit_message: "chore: update snake animation"
+          jekyll: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
