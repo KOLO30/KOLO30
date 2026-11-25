@@ -21,7 +21,8 @@ jobs:
             dist/github-snake-dark.svg?palette=github-dark&color_snake=#00E5FF
 
       - name: Crop outer margin
-        run: python3 -c 'import glob,re; [open(p,"w").write(re.sub(r"viewBox=\"([^\"]+)\"", lambda m: (lambda x,y,w,h: f"viewBox=\"{x+16:g} {y+16:g} {w-32:g} {h-16:g}\"")(*map(float,m.group(1).split())), open(p).read(), count=1)) for p in glob.glob("dist/*.svg")]'
+        run: |
+          python3 -c 'import glob,re; [open(p,"w").write(re.sub(r"viewBox=\"([^\"]+)\"", lambda m: "viewBox=\"{:g} {:g} {:g} {:g}\"".format(*[float(v)+d for v,d in zip(m.group(1).split(),[16,16,-32,-16])]), open(p).read(), count=1)) for p in glob.glob("dist/*.svg")]'
 
       - name: Deploy to output branch
         uses: crazy-max/ghaction-github-pages@v4
