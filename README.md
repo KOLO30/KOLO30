@@ -27,6 +27,7 @@
     and exploring new technologies.
 
 └─$ echo "Never stop learning."
+```
 
 - 🔭 Exploring new technologies and building projects
 - 🌱 Always learning and improving
